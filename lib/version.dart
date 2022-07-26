@@ -2,12 +2,12 @@ import 'dart:math';
 
 /// Model to represent a version
 class Version implements Comparable<Version> {
+  static RegExp versionRegExp = RegExp(r"[0-9]+(\\.[0-9]+)*");
+
   final String version;
 
   /// The version is passed as string in the format Major.Minor.Micro (Eg. 1.0.0)
   Version({required this.version}) {
-    RegExp versionRegExp = new RegExp(r"[0-9]+(\\.[0-9]+)*");
-
     if (!versionRegExp.hasMatch(version)) {
       throw FormatException();
     }
@@ -15,10 +15,8 @@ class Version implements Comparable<Version> {
 
   @override
   int compareTo(Version other) {
-    List<int> versionParts =
-        version.split(".").map((part) => int.parse(part)).toList();
-    List<int> otherParts =
-        other.version.split(".").map((part) => int.parse(part)).toList();
+    List<int> versionParts = version.split(".").map((part) => int.parse(part)).toList();
+    List<int> otherParts = other.version.split(".").map((part) => int.parse(part)).toList();
 
     int numberOfParts = max(versionParts.length, otherParts.length);
 

@@ -2,6 +2,7 @@ library version_migration;
 
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'version.dart';
 
 class VersionMigration {
@@ -10,8 +11,7 @@ class VersionMigration {
   static String _lastUpdatedAppVersionKey = "Migrator.lastUpdatedAppVersionKey";
 
   /// Migrate to version [version] executing the function [migrationFunction]
-  static Future<bool> migrateToVersion(
-      String version, Function migrationFunction) async {
+  static Future<bool> migrateToVersion(String version, Function migrationFunction) async {
     bool migrated = false;
     Version newVersion = Version(version: version);
 
@@ -25,14 +25,20 @@ class VersionMigration {
     return migrated;
   }
 
+  static Future<String> getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    return Version.versionRegExp.firstMatch(version)?[0] ?? version;
+  }
+
   /// If you need a block that runs every time your application version changes, executing the function [updatedFunction]
   static Future<void> applicationUpdate(Function updateFunction) async {
     Version lastUpdatedAppVersion = await _getLastUpdatedAppVersion();
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appVersion = await getAppVersion();
 
-    if (lastUpdatedAppVersion.toString() != packageInfo.version) {
+    if (lastUpdatedAppVersion.toString() != appVersion) {
       updateFunction();
-      await _setLastUpdatedAppVersion(packageInfo.version);
+      await _setLastUpdatedAppVersion(appVersion);
     }
   }
 
@@ -44,8 +50,7 @@ class VersionMigration {
 
   static Future<Version> _getLastMigratedVersion() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lastMigratedVersion =
-        prefs.getString(_lastMigratedVersionKey) ?? firstDefaultVersion;
+    String lastMigratedVersion = prefs.getString(_lastMigratedVersionKey) ?? firstDefaultVersion;
 
     return Version(version: lastMigratedVersion);
   }
@@ -70,17 +75,15 @@ class VersionMigration {
     await prefs.setString(_lastUpdatedAppVersionKey, value);
   }
 
-  static Future<bool> _newVersionIsGreaterThanLastMigratedVersion(
-      Version newVersion) async {
+  static Future<bool> _newVersionIsGreaterThanLastMigratedVersion(Version newVersion) async {
     Version lastMigratedVersion = await _getLastMigratedVersion();
 
     return newVersion.compareTo(lastMigratedVersion) == 1;
   }
 
-  static Future<bool> _newVersionIsNotGreaterThanAppVersion(
-      Version newVersion) async {
+  static Future<bool> _newVersionIsNotGreaterThanAppVersion(Version newVersion) async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    Version appVersion = Version(version: packageInfo.version);
+    Version appVersion = Version(version: await getAppVersion());
 
     return newVersion.compareTo(appVersion) < 1;
   }
