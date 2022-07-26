@@ -28,7 +28,8 @@ class VersionMigration {
   static Future<String> getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String version = packageInfo.version;
-    return Version.versionRegExp.firstMatch(version)?[0] ?? version;
+    RegExpMatch? match = Version.versionRegExp.firstMatch(version);
+    return match != null ? '${match[1]}.${match[2]}.${match[3]}' : version;
   }
 
   /// If you need a block that runs every time your application version changes, executing the function [updatedFunction]

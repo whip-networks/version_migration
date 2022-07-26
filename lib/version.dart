@@ -2,7 +2,8 @@ import 'dart:math';
 
 /// Model to represent a version
 class Version implements Comparable<Version> {
-  static RegExp versionRegExp = RegExp(r"[0-9]+(\\.[0-9]+)*");
+  static RegExp versionRegExp = RegExp(
+      r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$");
 
   final String version;
 
