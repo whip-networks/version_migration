@@ -16,7 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   version_migration:
     path: ../
-  shared_preferences: ^2.0.9
+  shared_preferences: ^2.2.0
   platform: ^3.1.0
 
 dev_dependencies:
