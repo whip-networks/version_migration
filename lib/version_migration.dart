@@ -31,7 +31,7 @@ class VersionMigration {
     String appVersion = await _getAppVersion();
 
     if (lastUpdatedAppVersion.toString() != appVersion) {
-      updateFunction();
+      await updateFunction();
       await _setLastUpdatedAppVersion(appVersion);
     }
   }
