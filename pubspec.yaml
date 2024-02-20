@@ -13,8 +13,8 @@ dependencies:
 
   package_info_plus: ^5.0.1
   shared_preferences: ^2.2.2
-  platform: ^3.1.2
-  file: ^6.1.4
+  platform: ^3.1.4
+  file: ^7.0.0
 
 dev_dependencies:
   flutter_test:
